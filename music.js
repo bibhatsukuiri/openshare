@@ -41,7 +41,9 @@ const LESSONS = {
 };
 
 const el = id => document.getElementById(id);
-const keyElements = Array.from(document.querySelectorAll(".key"));
+const keyboardElement = el("keyboard");
+const originalKeyboardMarkup = keyboardElement.innerHTML;
+let keyElements = Array.from(keyboardElement.querySelectorAll(".key"));
 const keys = new Map(keyElements.map(key => [Number(key.dataset.note), key]));
 const lessonCards = Array.from(document.querySelectorAll(".lesson-tile"));
 const audioStatus = el("audio-status");
@@ -57,6 +59,23 @@ const droneButton = el("drone-toggle");
 const saSelect = el("sa-select");
 const tempo = el("tempo");
 const tempoValue = el("tempo-value");
+const fingeringSelect = el("fingering-mode");
+const fingeringHint = el("fingering-hint");
+
+const SCALE_OFFSETS = [0, 2, 4, 5, 7, 9, 11, 12];
+const FINGERING_GUIDES = {
+  bb: { midi: 70, name: "B♭", fingers: [4, 1, 2, 3, 1, 2, 3, 4] },
+  gsharp: { midi: 68, name: "G♯ / A♭", fingers: [3, 4, 1, 2, 3, 1, 2, 3] }
+};
+const PHYSICAL_WHITE_PITCHES = new Set([0, 2, 4, 5, 7, 9, 11]);
+const PITCH_NAMES = ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "G♯", "A", "B♭", "B"];
+const SHORT_SARGAM = {
+  0: "Sa", 1: "re♭", 2: "Re", 3: "ga♭", 4: "Ga", 5: "Ma",
+  6: "Ma♯", 7: "Pa", 8: "dha♭", 9: "Dha", 10: "ni♭", 11: "Ni", 12: "Sa'"
+};
+function pitchName(midi) {
+  return PITCH_NAMES[((midi % 12) + 12) % 12];
+}
 
 
 /* Full screen: use the browser API when available, with a mobile
@@ -273,6 +292,89 @@ function stopEverySound() {
   keyElements.forEach(key => key.classList.remove("is-pressed"));
 }
 
+/* Fingering mode uses actual black/white piano key positions.
+   The normal transposing sargam layout is preserved when the guide is off. */
+function refreshKeyLookup() {
+  keyElements = Array.from(keyboardElement.querySelectorAll(".key"));
+  keys.clear();
+  keyElements.forEach(key => keys.set(Number(key.dataset.note), key));
+}
+
+function createPhysicalKey(midi, kind, finger, whiteIndex) {
+  const offset = midi - saMidi;
+  const key = document.createElement("button");
+  key.type = "button";
+  key.className = "key " + (kind === "black" ? "black-key" : "white-key");
+  key.dataset.note = String(offset);
+  const sargam = SHORT_SARGAM[offset] || pitchName(midi);
+  key.setAttribute("aria-label",
+    sargam + " (" + pitchName(midi) + ")" +
+    (finger ? ", right-hand finger " + finger : ""));
+  if (kind === "black") {
+    key.style.left = "calc(var(--white-key-width) * " + whiteIndex +
+      " - var(--black-key-width) / 2)";
+  }
+  const roman = document.createElement("span");
+  roman.className = "key-roman";
+  roman.textContent = sargam;
+  const name = document.createElement("span");
+  name.className = "key-dev";
+  name.textContent = pitchName(midi);
+  key.append(roman, name);
+  if (finger) {
+    const number = document.createElement("span");
+    number.className = "finger-label";
+    number.textContent = String(finger);
+    number.setAttribute("aria-hidden", "true");
+    key.append(number);
+  }
+  return key;
+}
+
+function renderFingeringKeyboard() {
+  const guide = FINGERING_GUIDES[fingeringSelect.value];
+  stopEverySound();
+  keyboardElement.replaceChildren();
+  if (!guide) {
+    keyboardElement.classList.remove("physical-layout");
+    keyboardElement.style.removeProperty("--white-key-count");
+    keyboardElement.innerHTML = originalKeyboardMarkup;
+    fingeringHint.hidden = true;
+    fingeringHint.textContent = "";
+  } else {
+    // Both guides begin on a black key. Include the natural white
+    // keys immediately before and after the one-octave scale.
+    const whites = [];
+    for (let midi = saMidi - 1; midi <= saMidi + 13; midi++) {
+      if (PHYSICAL_WHITE_PITCHES.has((midi + 120) % 12)) whites.push(midi);
+    }
+    const fingerMap = new Map(SCALE_OFFSETS.map((offset, i) => [offset, guide.fingers[i]]));
+    const blackKeys = [];
+    whites.forEach((midi, i) => {
+      keyboardElement.append(createPhysicalKey(
+        midi, "white", fingerMap.get(midi - saMidi), i
+      ));
+      if (i + 1 < whites.length && whites[i + 1] - midi === 2) {
+        const blackMidi = midi + 1;
+        blackKeys.push(createPhysicalKey(
+          blackMidi, "black", fingerMap.get(blackMidi - saMidi), i + 1
+        ));
+      }
+    });
+    keyboardElement.append(...blackKeys);
+    keyboardElement.classList.add("physical-layout");
+    keyboardElement.style.setProperty("--white-key-count", String(whites.length));
+    fingeringHint.hidden = false;
+    fingeringHint.textContent = guide.name + " · Right hand: " +
+      guide.fingers.join("–") + "  (1 thumb, 2 index, 3 middle, 4 ring, 5 little)";
+  }
+  refreshKeyLookup();
+  if (droneOn) {
+    noteOn(-12, "drone");
+    noteOn(-5, "drone");
+  }
+}
+
 function getLesson() {
   return LESSONS[selectedLesson];
 }
@@ -360,7 +462,7 @@ function chooseLesson(id) {
 }
 
 function recordAttempt(offset) {
-  noteDisplay.textContent = "Playing " + NOTE_NAMES.get(offset);
+  noteDisplay.textContent = "Playing " + (NOTE_NAMES.get(offset) || pitchName(saMidi + offset));
   if (!isPracticing) return;
 
   const expected = getLesson().notes[practiceIndex];
@@ -436,15 +538,15 @@ async function playDemo() {
   noteDisplay.textContent = "Ready to practice";
 }
 
-keyElements.forEach(key => {
-  key.addEventListener("pointerdown", event => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    if (activePointers.has(event.pointerId)) return;
-    const offset = Number(key.dataset.note);
-    const source = "pointer:" + event.pointerId;
-    activePointers.set(event.pointerId, { offset, source });
-    pressKey(offset, source);
-  });
+keyboardElement.addEventListener("pointerdown", event => {
+  const key = event.target.closest(".key");
+  if (!key || !keyboardElement.contains(key)) return;
+  if (event.pointerType === "mouse" && event.button !== 0) return;
+  if (activePointers.has(event.pointerId)) return;
+  const offset = Number(key.dataset.note);
+  const source = "pointer:" + event.pointerId;
+  activePointers.set(event.pointerId, { offset, source });
+  pressKey(offset, source);
 });
 
 function finishPointer(event) {
@@ -497,9 +599,32 @@ listenButton.addEventListener("click", playDemo);
 practiceButton.addEventListener("click", startPractice);
 stopButton.addEventListener("click", stopSession);
 
+fingeringSelect.addEventListener("change", () => {
+  endDemo();
+  isPracticing = false;
+  isCompleted = false;
+  practiceIndex = 0;
+  const guide = FINGERING_GUIDES[fingeringSelect.value];
+  if (guide) {
+    saMidi = guide.midi;
+    saSelect.value = String(saMidi);
+  }
+  renderFingeringKeyboard();
+  setIdleActions();
+  renderLesson();
+  noteDisplay.textContent = guide ? guide.name + " fingering" : "Ready to play";
+  setFeedback(guide
+    ? "Numbered keys show suggested right-hand fingers. Choose Start practice to follow the scale."
+    : "Fingering hidden. Select a lesson to practise.");
+});
+
 saSelect.addEventListener("change", () => {
   saMidi = Number(saSelect.value);
   endDemo();
+  if (fingeringSelect.value !== "off") {
+    fingeringSelect.value = "off";
+    renderFingeringKeyboard();
+  }
   stopEverySound();
   if (droneOn) {
     noteOn(-12, "drone");
