@@ -101,12 +101,19 @@
             <h2 id="learn-title">Lessons</h2>
           </div>
         </div>
-        <div id="lesson-list" class="lesson-list" aria-label="Choose an exercise">
-          <button type="button" class="lesson-tile is-selected" data-lesson="aroha" aria-pressed="true"><strong>Aroha</strong></button>
-          <button type="button" class="lesson-tile" data-lesson="avaroha" aria-pressed="false"><strong>Avaroha</strong></button>
-          <button type="button" class="lesson-tile" data-lesson="three" aria-pressed="false"><strong>Sa Re Ga</strong></button>
-          <button type="button" class="lesson-tile" data-lesson="alankar" aria-pressed="false"><strong>Alankar</strong></button>
-          <button type="button" class="lesson-tile" data-lesson="sapa" aria-pressed="false"><strong>Sa Pa Sa</strong></button>
+        <div class="lesson-chooser">
+          <label for="lesson-select">Exercise</label>
+          <select id="lesson-select" aria-label="Choose a lesson">
+            <option value="aroha">Aroha (ascending)</option>
+            <option value="avaroha">Avaroha (descending)</option>
+            <option value="anthem">Jana Gana Mana</option>
+          </select>
+          <div id="song-line-controls" class="song-line-controls" hidden>
+            <label for="song-line-select">Song line</label>
+            <select id="song-line-select" aria-label="Choose Jana Gana Mana line"></select>
+            <button type="button" id="previous-line" class="line-nav" aria-label="Previous line">‹</button>
+            <button type="button" id="next-line" class="line-nav" aria-label="Next line">›</button>
+          </div>
         </div>
 
         <div class="lesson-player">
@@ -121,6 +128,7 @@
           <p class="feedback" id="practice-feedback" role="status" aria-live="polite">Press Listen to hear the exercise, or Start practice to follow the keys.</p>
           <div class="lesson-actions">
             <button type="button" id="listen-button" class="action-button secondary"><span aria-hidden="true">▶</span> Listen</button>
+            <button type="button" id="listen-all-button" class="action-button secondary" hidden>▶ Full song</button>
             <button type="button" id="practice-button" class="action-button primary">Start practice <span aria-hidden="true">→</span></button>
             <button type="button" id="stop-button" class="action-button subtle" hidden>Stop</button>
           </div>
