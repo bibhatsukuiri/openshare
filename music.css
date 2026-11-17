@@ -595,3 +595,24 @@ body.focus-mode .keyboard.physical-layout .black-key .key-roman{
   }
   body.focus-mode .keyboard .key{touch-action:none}
 }
+
+/* Instructor credit: quiet footer, visible below practice controls. */
+.instructor-credit{
+  margin:26px 0 18px;
+  padding:12px 0;
+  border-top:1px solid var(--line);
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:500;
+}
+body.focus-mode .instructor-credit{
+  flex-shrink:0;
+  margin:8px 0 0;
+  padding:5px 0 0;
+  border-top:0;
+  font-size:11px;
+}
+@media(orientation:landscape) and (max-height:620px){
+  body.focus-mode .instructor-credit{margin:3px 0 0;padding:2px 0 0}
+}
