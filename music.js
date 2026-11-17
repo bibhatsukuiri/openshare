@@ -12,31 +12,39 @@ const NOTE_NAMES = new Map([
   [12, "High Sa"]
 ]);
 
+// Full national anthem melody, organized into 13 short practice lines.
+// Sa is movable. Low Ni = -1 semitone relative to Sa.
+const ANTHEM_LINES = [
+  { lyric:"Jana gana mana adhinayaka jaya he", notes:[0,2,4,4,4,4,4,4,4,4,4,2,4,5] },
+  { lyric:"Bharata bhagya vidhata", notes:[4,4,4,2,2,2,-1,2,0] },
+  { lyric:"Punjab Sindhu Gujarata Maratha", notes:[0,7,7,7,7,7,7,7,7,7,5,9,7] },
+  { lyric:"Dravida Utkala Banga", notes:[5,5,5,4,4,4,2,5,4] },
+  { lyric:"Vindhya Himachala Yamuna Ganga", notes:[4,4,4,4,4,2,7,7,7,5,5] },
+  { lyric:"Uchchhala jaladhi taranga", notes:[4,4,4,2,2,2,-1,2,0] },
+  { lyric:"Tava shubha name jage", notes:[0,2,4,4,4,4,2,4,5] },
+  { lyric:"Tava shubha ashisa mage", notes:[4,5,7,7,7,5,4,2,5,4] },
+  { lyric:"Gahe tava jaya gatha", notes:[4,4,2,2,2,-1,2,0] },
+  { lyric:"Jana gana mangala dayaka jaya he", notes:[7,7,7,7,7,7,7,7,7,7,5,9,7] },
+  { lyric:"Bharata bhagya vidhata", notes:[5,5,5,4,4,4,2,5,4] },
+  { lyric:"Jaya he, jaya he, jaya he", notes:[11,11,12,11,9,11,9,7,9] },
+  { lyric:"Jaya jaya jaya jaya he", notes:[0,0,2,2,4,4,2,4,5] }
+];
+
 const LESSONS = {
   aroha: {
-    title: "Aroha",
-    description: "Play all eight shuddh notes upward, from Sa to high Sa.",
-    notes: [0, 2, 4, 5, 7, 9, 11, 12]
+    title:"Aroha",
+    description:"Play all eight shuddh notes upward, from Sa to high Sa.",
+    notes:[0,2,4,5,7,9,11,12]
   },
   avaroha: {
-    title: "Avaroha",
-    description: "Return from high Sa to low Sa, one note at a time.",
-    notes: [12, 11, 9, 7, 5, 4, 2, 0]
+    title:"Avaroha",
+    description:"Return from high Sa to low Sa, one note at a time.",
+    notes:[12,11,9,7,5,4,2,0]
   },
-  three: {
-    title: "Sa Re Ga",
-    description: "A short practice for learning your first three notes.",
-    notes: [0, 2, 4, 2, 0]
-  },
-  alankar: {
-    title: "Simple Alankar",
-    description: "Repeat a small ascending pattern to develop finger control.",
-    notes: [0, 2, 4, 2, 4, 5, 4, 5, 7, 5, 7, 9]
-  },
-  sapa: {
-    title: "Sa Pa Sa",
-    description: "Hear and practice the relationship between Sa and Pa.",
-    notes: [0, 7, 12, 7, 0]
+  anthem: {
+    title:"Jana Gana Mana",
+    description:"Practice the national anthem one line at a time.",
+    notes:ANTHEM_LINES[0].notes
   }
 };
 
@@ -45,7 +53,12 @@ const keyboardElement = el("keyboard");
 const originalKeyboardMarkup = keyboardElement.innerHTML;
 let keyElements = Array.from(keyboardElement.querySelectorAll(".key"));
 const keys = new Map(keyElements.map(key => [Number(key.dataset.note), key]));
-const lessonCards = Array.from(document.querySelectorAll(".lesson-tile"));
+const lessonSelect = el("lesson-select");
+const songLineControls = el("song-line-controls");
+const songLineSelect = el("song-line-select");
+const previousLineButton = el("previous-line");
+const nextLineButton = el("next-line");
+const listenAllButton = el("listen-all-button");
 const audioStatus = el("audio-status");
 const noteDisplay = el("note-display");
 const feedback = el("practice-feedback");
@@ -84,7 +97,14 @@ const fullscreenButton = el("fullscreen-toggle");
 const fullscreenLabel = el("fullscreen-label");
 const fullscreenStatus = el("fullscreen-status");
 const fullscreenTarget = document.querySelector(".page");
-let fallbackFocusMode = false;
+// Installed home-screen apps launch directly in the compact immersive view.
+// A regular browser page still requires the Full screen button.
+const runningInstalled = () =>
+  (window.matchMedia && (
+    window.matchMedia("(display-mode: fullscreen)").matches ||
+    window.matchMedia("(display-mode: standalone)").matches
+  )) || window.navigator.standalone === true;
+let fallbackFocusMode = Boolean(runningInstalled());
 
 function refreshFullscreenMode() {
   const nativeFullscreen = Boolean(document.fullscreenElement);
@@ -142,6 +162,7 @@ refreshFullscreenMode();
 
 let saMidi = Number(saSelect.value);
 let selectedLesson = "aroha";
+let songLineIndex = 0;
 let isPracticing = false;
 let isCompleted = false;
 let practiceIndex = 0;
@@ -336,12 +357,36 @@ function renderFingeringKeyboard() {
   stopEverySound();
   keyboardElement.replaceChildren();
   if (!guide) {
-    keyboardElement.classList.remove("physical-layout");
+    keyboardElement.classList.remove("physical-layout", "anthem-layout");
     keyboardElement.style.removeProperty("--white-key-count");
     keyboardElement.innerHTML = originalKeyboardMarkup;
+    if (selectedLesson === "anthem") {
+      const lowerNi = document.createElement("button");
+      lowerNi.type = "button";
+      lowerNi.className = "key white-key";
+      lowerNi.dataset.note = "-1";
+      lowerNi.setAttribute("aria-label", "Low Ni, note below Sa");
+      const roman = document.createElement("span");
+      roman.className = "key-roman";
+      roman.textContent = "Ni↓";
+      const dev = document.createElement("span");
+      dev.className = "key-dev";
+      dev.textContent = "नि";
+      lowerNi.append(roman, dev);
+      keyboardElement.insertBefore(lowerNi, keyboardElement.firstElementChild);
+      const boundaries = {1:2, 3:3, 6:5, 8:6, 10:7};
+      for (const black of keyboardElement.querySelectorAll(".black-key")) {
+        const boundary = boundaries[Number(black.dataset.note)];
+        if (boundary !== undefined) black.style.left =
+          "calc(var(--white-key-width) * " + boundary + " - var(--black-key-width) / 2)";
+      }
+      keyboardElement.classList.add("anthem-layout");
+      keyboardElement.style.setProperty("--white-key-count", "9");
+    }
     fingeringHint.hidden = true;
     fingeringHint.textContent = "";
   } else {
+    keyboardElement.classList.remove("anthem-layout");
     // Both guides begin on a black key. Include the natural white
     // keys immediately before and after the one-octave scale.
     const whites = [];
@@ -376,19 +421,30 @@ function renderFingeringKeyboard() {
 }
 
 function getLesson() {
-  return LESSONS[selectedLesson];
+  if (selectedLesson !== "anthem") return LESSONS[selectedLesson];
+  const line = ANTHEM_LINES[songLineIndex];
+  return {
+    title:"Jana Gana Mana",
+    description:line.lyric,
+    notes:line.notes
+  };
 }
 
 function renderLesson() {
   const lesson = getLesson();
-  el("selected-lesson-name").textContent = lesson.title;
+  const isSong = selectedLesson === "anthem";
+  el("selected-lesson-name").textContent = isSong
+    ? "Jana Gana Mana · " + (songLineIndex + 1) + "/13"
+    : lesson.title;
   el("selected-lesson-detail").textContent = lesson.description;
-
-  lessonCards.forEach(card => {
-    const selected = card.dataset.lesson === selectedLesson;
-    card.classList.toggle("is-selected", selected);
-    card.setAttribute("aria-pressed", String(selected));
-  });
+  lessonSelect.value = selectedLesson;
+  songLineControls.hidden = !isSong;
+  listenAllButton.hidden = !isSong;
+  if (isSong) {
+    songLineSelect.value = String(songLineIndex);
+    previousLineButton.disabled = songLineIndex === 0;
+    nextLineButton.disabled = songLineIndex === ANTHEM_LINES.length - 1;
+  }
 
   noteSequence.replaceChildren();
   lesson.notes.forEach((offset, index) => {
@@ -424,6 +480,7 @@ function renderLesson() {
 
 function setIdleActions() {
   listenButton.disabled = false;
+  listenAllButton.disabled = false;
   listenButton.textContent = "▶ Listen";
   practiceButton.textContent = isCompleted ? "Practice again →" : "Start practice →";
   stopButton.hidden = !isPracticing && !demoPlaying;
@@ -455,10 +512,25 @@ function chooseLesson(id) {
   isCompleted = false;
   practiceIndex = 0;
   selectedLesson = id;
+  songLineIndex = 0;
+  renderFingeringKeyboard();
   setIdleActions();
   renderLesson();
   setFeedback("Press Listen to hear this exercise, or Start practice to follow the keys.");
   noteDisplay.textContent = "Ready to play";
+}
+
+function chooseSongLine(index) {
+  if (selectedLesson !== "anthem" || !Number.isInteger(index) ||
+      index < 0 || index >= ANTHEM_LINES.length) return;
+  endDemo();
+  isPracticing = false;
+  isCompleted = false;
+  practiceIndex = 0;
+  songLineIndex = index;
+  setIdleActions();
+  renderLesson();
+  setFeedback("Line " + (index + 1) + ": Listen, then practise the highlighted notes.");
 }
 
 function recordAttempt(offset) {
@@ -503,8 +575,8 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function playDemo() {
-  // Audio must be unlocked directly inside the click handler on mobile.
+async function playDemo(fullSong = false) {
+  // Unlock audio within the click event so mobile audio is allowed.
   if (!ensureAudio()) return;
 
   endDemo();
@@ -513,29 +585,46 @@ async function playDemo() {
   practiceIndex = 0;
   demoPlaying = true;
   const currentToken = ++demoToken;
-  const notes = [...getLesson().notes];
+  const allLines = fullSong && selectedLesson === "anthem";
+  const lineIndices = allLines
+    ? ANTHEM_LINES.map((_, index) => index)
+    : [songLineIndex];
   const beat = 60000 / Number(tempo.value);
   listenButton.disabled = true;
-  listenButton.textContent = "♪ Playing...";
+  listenAllButton.disabled = true;
+  listenButton.textContent = allLines ? "♪ Full song..." : "♪ Playing...";
   stopButton.hidden = false;
-  setFeedback("Listen to the melody and watch the highlighted keys.");
+  setFeedback(allLines
+    ? "Playing the full anthem, one line at a time."
+    : "Listen and watch the highlighted keys.");
 
-  for (let i = 0; i < notes.length; i += 1) {
+  for (const lineIndex of lineIndices) {
     if (currentToken !== demoToken) return;
-    demoIndex = i;
-    renderLesson();
-    noteDisplay.textContent = "Playing " + NOTE_NAMES.get(notes[i]);
-    noteOn(notes[i], "demo");
-    await delay(Math.max(180, beat * 0.78));
-    noteOff(notes[i], "demo");
-    if (currentToken !== demoToken) return;
-    await delay(Math.max(65, beat * 0.15));
+    if (selectedLesson === "anthem") songLineIndex = lineIndex;
+    const notes = [...getLesson().notes];
+
+    for (let i = 0; i < notes.length; i += 1) {
+      if (currentToken !== demoToken) return;
+      demoIndex = i;
+      renderLesson();
+      noteDisplay.textContent = "Playing " +
+        (NOTE_NAMES.get(notes[i]) || pitchName(saMidi + notes[i]));
+      noteOn(notes[i], "demo");
+      const held = (i === notes.length - 1) ? 1.55 : 0.78;
+      await delay(Math.max(180, beat * held));
+      noteOff(notes[i], "demo");
+      if (currentToken !== demoToken) return;
+      await delay(Math.max(55, beat * 0.12));
+    }
+    if (allLines && lineIndex < ANTHEM_LINES.length - 1) await delay(beat * 0.45);
   }
 
   if (currentToken !== demoToken) return;
   endDemo();
-  setFeedback("Listening finished. Press Start practice to play it yourself.");
-  noteDisplay.textContent = "Ready to practice";
+  setFeedback(allLines
+    ? "Full-song playback finished. Select a line to practise."
+    : "Listening finished. Press Start practice to play this line yourself.");
+  noteDisplay.textContent = "Ready to practise";
 }
 
 keyboardElement.addEventListener("pointerdown", event => {
@@ -592,10 +681,19 @@ document.addEventListener("keyup", event => {
   noteOff(KEYBOARD_NOTES[key], "keyboard:" + key);
 });
 
-lessonCards.forEach(card => {
-  card.addEventListener("click", () => chooseLesson(card.dataset.lesson));
+// Populate the compact line selector for guided anthem practice.
+ANTHEM_LINES.forEach((line, index) => {
+  const option = document.createElement("option");
+  option.value = String(index);
+  option.textContent = (index + 1) + ". " + line.lyric;
+  songLineSelect.append(option);
 });
-listenButton.addEventListener("click", playDemo);
+lessonSelect.addEventListener("change", () => chooseLesson(lessonSelect.value));
+songLineSelect.addEventListener("change", () => chooseSongLine(Number(songLineSelect.value)));
+previousLineButton.addEventListener("click", () => chooseSongLine(songLineIndex - 1));
+nextLineButton.addEventListener("click", () => chooseSongLine(songLineIndex + 1));
+listenButton.addEventListener("click", () => playDemo(false));
+listenAllButton.addEventListener("click", () => playDemo(true));
 practiceButton.addEventListener("click", startPractice);
 stopButton.addEventListener("click", stopSession);
 
@@ -679,7 +777,10 @@ setIdleActions();
   const installHelp = document.getElementById("install-help");
   let installPrompt = null;
   const isStandalone = () =>
-    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+    (window.matchMedia && (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.matchMedia("(display-mode: fullscreen)").matches
+    )) ||
     window.navigator.standalone === true;
 
   if (isStandalone()) {
