@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f5f1">
+  <meta name="description" content="Learn basic Indian classical music with a touch-friendly virtual harmonium, sargam lessons, and guided practice.">
+  <title>Harmonium Classroom | OpenShare Music</title>
+  <link rel="stylesheet" href="./music.css">
+  <script defer src="./music.js"></script>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="home-link" href="./"><span aria-hidden="true">←</span> OpenShare</a>
+      <span class="topbar-label"><span class="brand-dot" aria-hidden="true"></span> MUSIC CLASSROOM</span>
+    </header>
+
+    <main>
+      <section class="intro">
+        <div class="intro-copy">
+          <span class="eyebrow">PLAY • LISTEN • PRACTICE</span>
+          <h1>Your first steps on the <em>harmonium.</em></h1>
+          <p>Tap the keys to hear the notes. Choose a sargam exercise, listen to it, and then follow the highlighted keys at your own pace.</p>
+        </div>
+        <div class="intro-mark" aria-hidden="true">
+          <span>सा</span><span>रे</span><span>ग</span><span>म</span>
+        </div>
+      </section>
+
+      <section class="instrument card" aria-labelledby="instrument-title">
+        <div class="section-title">
+          <div>
+            <span class="section-kicker">01 / THE INSTRUMENT</span>
+            <h2 id="instrument-title">Your harmonium</h2>
+          </div>
+          <span class="live-badge" id="audio-status"><span aria-hidden="true"></span> Tap to play</span>
+        </div>
+
+        <div class="controls">
+          <label class="control" for="sa-select">
+            <span>Set your Sa</span>
+            <select id="sa-select" aria-label="Choose Sa pitch">
+              <option value="60">C</option><option value="61">C♯ / D♭</option>
+              <option value="62">D</option><option value="63">D♯ / E♭</option>
+              <option value="64">E</option><option value="65">F</option>
+              <option value="66">F♯ / G♭</option><option value="67">G</option>
+              <option value="68">G♯ / A♭</option><option value="69">A</option>
+              <option value="70">A♯ / B♭</option><option value="71">B</option>
+            </select>
+          </label>
+          <div class="control tempo-control">
+            <label for="tempo">Practice tempo <strong id="tempo-value">90 BPM</strong></label>
+            <input type="range" id="tempo" min="55" max="160" step="5" value="90">
+          </div>
+          <button id="drone-toggle" type="button" class="soft-button" aria-pressed="false"><span aria-hidden="true">♫</span> Sa-Pa drone: Off</button>
+        </div>
+
+        <div class="keyboard-outer">
+          <div class="keyboard-scroll" aria-label="Virtual harmonium keyboard; scroll horizontally to view all keys">
+            <div class="keyboard" id="keyboard" role="group" aria-label="Virtual harmonium keys">
+              <button type="button" class="key white-key" data-note="0" aria-label="Sa, C if Sa is C"><span class="key-roman">Sa</span><span class="key-dev">सा</span></button>
+              <button type="button" class="key white-key" data-note="2" aria-label="Re"><span class="key-roman">Re</span><span class="key-dev">रे</span></button>
+              <button type="button" class="key white-key" data-note="4" aria-label="Ga"><span class="key-roman">Ga</span><span class="key-dev">ग</span></button>
+              <button type="button" class="key white-key" data-note="5" aria-label="Ma"><span class="key-roman">Ma</span><span class="key-dev">म</span></button>
+              <button type="button" class="key white-key" data-note="7" aria-label="Pa"><span class="key-roman">Pa</span><span class="key-dev">प</span></button>
+              <button type="button" class="key white-key" data-note="9" aria-label="Dha"><span class="key-roman">Dha</span><span class="key-dev">ध</span></button>
+              <button type="button" class="key white-key" data-note="11" aria-label="Ni"><span class="key-roman">Ni</span><span class="key-dev">नि</span></button>
+              <button type="button" class="key white-key" data-note="12" aria-label="High Sa"><span class="key-roman">Sa'</span><span class="key-dev">सां</span></button>
+
+              <button type="button" class="key black-key black-0" data-note="1" aria-label="Komal Re"><span>re♭</span></button>
+              <button type="button" class="key black-key black-1" data-note="3" aria-label="Komal Ga"><span>ga♭</span></button>
+              <button type="button" class="key black-key black-3" data-note="6" aria-label="Tivra Ma"><span>Ma♯</span></button>
+              <button type="button" class="key black-key black-4" data-note="8" aria-label="Komal Dha"><span>dha♭</span></button>
+              <button type="button" class="key black-key black-5" data-note="10" aria-label="Komal Ni"><span>ni♭</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="instrument-foot">
+          <span><span class="legend-dot" aria-hidden="true"></span> A glowing key is your next note</span>
+          <span id="note-display" class="now-playing" aria-live="polite">Ready to play</span>
+        </div>
+        <p class="keyboard-hint">On a phone, swipe left or right to see the whole keyboard. Turn your phone sideways for larger keys. Audio begins when you touch a key or press Listen.</p>
+      </section>
+
+      <section class="learn card" aria-labelledby="learn-title">
+        <div class="section-title">
+          <div>
+            <span class="section-kicker">02 / LEARN BY PLAYING</span>
+            <h2 id="learn-title">Beginner lessons</h2>
+          </div>
+          <span class="lesson-count">5 exercises</span>
+        </div>
+        <div id="lesson-list" class="lesson-list" aria-label="Choose an exercise">
+          <button type="button" class="lesson-tile is-selected" data-lesson="aroha" aria-pressed="true"><span class="lesson-number">01</span><strong>Aroha</strong><small>Notes going up</small></button>
+          <button type="button" class="lesson-tile" data-lesson="avaroha" aria-pressed="false"><span class="lesson-number">02</span><strong>Avaroha</strong><small>Notes going down</small></button>
+          <button type="button" class="lesson-tile" data-lesson="three" aria-pressed="false"><span class="lesson-number">03</span><strong>Sa Re Ga</strong><small>First three notes</small></button>
+          <button type="button" class="lesson-tile" data-lesson="alankar" aria-pressed="false"><span class="lesson-number">04</span><strong>Alankar</strong><small>Simple note pattern</small></button>
+          <button type="button" class="lesson-tile" data-lesson="sapa" aria-pressed="false"><span class="lesson-number">05</span><strong>Sa Pa Sa</strong><small>Find your intervals</small></button>
+        </div>
+
+        <div class="lesson-player">
+          <div class="lesson-player-head">
+            <div>
+              <span class="section-kicker">SELECTED EXERCISE</span>
+              <h3 id="selected-lesson-name">Aroha</h3>
+              <p id="selected-lesson-detail">Play all eight shuddh notes upward, from Sa to high Sa.</p>
+            </div>
+            <span class="difficulty">BEGINNER</span>
+          </div>
+          <div class="note-sequence" id="note-sequence" aria-label="Notes in the exercise"></div>
+          <div class="progress-track" role="progressbar" aria-label="Exercise progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-track"><div id="progress-fill"></div></div>
+          <p class="feedback" id="practice-feedback" role="status" aria-live="polite">Press Listen to hear the exercise, or Start practice to follow the keys.</p>
+          <div class="lesson-actions">
+            <button type="button" id="listen-button" class="action-button secondary"><span aria-hidden="true">▶</span> Listen</button>
+            <button type="button" id="practice-button" class="action-button primary">Start practice <span aria-hidden="true">→</span></button>
+            <button type="button" id="stop-button" class="action-button subtle" hidden>Stop</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="tips" aria-label="Tips for beginners">
+        <div><span class="tip-number">01</span><p><strong>Start slowly.</strong> Try one note at a time and focus on the sound.</p></div>
+        <div><span class="tip-number">02</span><p><strong>Use the highlighted keys.</strong> Follow the notes in order during practice.</p></div>
+        <div><span class="tip-number">03</span><p><strong>Repeat aloud.</strong> Sing Sa, Re, Ga as you press each key.</p></div>
+      </section>
+    </main>
+    <footer>OpenShare Music · A simple learning tool for music classes · <a href="./">Back to OpenShare</a></footer>
+  </div>
+</body>
+</html>
