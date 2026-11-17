@@ -404,3 +404,112 @@ body.focus-mode .action-button.primary{padding:8px 18px}
   body.focus-mode .note-chip{min-height:28px;padding:3px}
   body.focus-mode .feedback{margin:3px 0}
 }
+
+
+/* Optional right-hand fingering guides for B-flat and G-sharp / A-flat. */
+.fingering-control select{min-width:108px}
+.fingering-hint{
+  font-size:12px;
+  line-height:1.55;
+  color:var(--muted);
+  margin:7px 0 0;
+}
+.fingering-hint[hidden]{display:none}
+.keyboard.physical-layout{
+  width:calc(var(--white-key-width) * var(--white-key-count));
+}
+.keyboard.physical-layout .white-key{position:relative}
+.keyboard.physical-layout .black-key{
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  gap:4px;
+  padding-bottom:12px;
+}
+.keyboard.physical-layout .black-key .key-roman{
+  font-size:11px;
+  line-height:1.1;
+  font-weight:650;
+}
+.keyboard.physical-layout .black-key .key-dev{
+  font-size:10px;
+  color:#b5c6bf;
+  line-height:1.1;
+}
+.keyboard.physical-layout .white-key .key-dev{
+  color:#667e72;
+}
+.keyboard.physical-layout .finger-label{
+  position:absolute;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:23px;height:23px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  font-weight:750;
+  background:#dceee5;
+  color:#185a4c;
+}
+.keyboard.physical-layout .black-key .finger-label{
+  top:9px;
+  background:#e6f4ec;
+  color:#165749;
+}
+.keyboard.physical-layout .key.is-target .finger-label{
+  background:#f8d797;
+  color:#513809;
+}
+body.focus-mode .controls{
+  grid-template-columns:minmax(67px,.8fr) minmax(93px,1fr) minmax(116px,1.35fr);
+  gap:4px 10px;
+}
+body.focus-mode .fingering-control select{
+  width:100%;
+  min-width:0;
+}
+body.focus-mode .soft-button{
+  grid-column:1/-1;
+  justify-self:start;
+  align-self:center;
+  text-align:left;
+  min-height:24px;
+  padding:3px 0;
+}
+body.focus-mode .fingering-hint{
+  font-size:11px;
+  margin:3px 0 0;
+  white-space:nowrap;
+  overflow-x:auto;
+}
+body.focus-mode .keyboard.physical-layout .white-key .key-roman{
+  font-size:13px;
+}
+body.focus-mode .keyboard.physical-layout .black-key .key-roman{
+  font-size:10px;
+}
+@media(max-width:375px){
+  body.focus-mode .controls{
+    grid-template-columns:minmax(68px,.76fr) minmax(91px,1fr) minmax(107px,1.35fr);
+    gap:3px 7px;
+  }
+  body.focus-mode .fingering-hint{font-size:10px}
+}
+@media(orientation:landscape) and (max-height:620px){
+  body.focus-mode .soft-button{
+    grid-column:auto;
+    min-height:30px;
+  }
+  body.focus-mode .controls{
+    grid-template-columns:minmax(70px,.8fr) minmax(90px,1fr) minmax(150px,1.45fr) minmax(100px,1fr);
+  }
+  body.focus-mode .fingering-hint{margin:2px 0 0}
+  body.focus-mode .keyboard.physical-layout .finger-label{
+    top:5px;
+    width:21px;height:21px;
+    font-size:12px;
+  }
+}
