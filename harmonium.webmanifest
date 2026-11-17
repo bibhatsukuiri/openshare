@@ -1,0 +1,20 @@
+{
+  "id": "./music.html",
+  "name": "Harmonium Classroom",
+  "short_name": "Harmonium",
+  "description": "Touch-friendly harmonium practice with sargam exercises",
+  "start_url": "./music.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./harmonium-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
