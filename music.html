@@ -11,16 +11,18 @@
 </head>
 <body>
   <div class="page">
-    <header class="topbar">
-      <a class="home-link" href="./"><span aria-hidden="true">←</span> OpenShare</a>
-      <span class="topbar-label">Music</span>
-    </header>
-
     <main>
       <section class="intro">
         <div class="intro-copy">
-          <h1>Harmonium</h1>
+          <div class="intro-title-line">
+            <h1>Harmonium</h1>
+            <button type="button" id="fullscreen-toggle" class="fullscreen-toggle" aria-pressed="false" aria-label="Enter full screen">
+              <span class="fullscreen-symbol" aria-hidden="true">⛶</span>
+              <span id="fullscreen-label">Full screen</span>
+            </button>
+          </div>
           <p>Play the keys, listen to an exercise, and practice at your own pace.</p>
+          <span id="fullscreen-status" class="sr-only" role="status" aria-live="polite"></span>
         </div>
       </section>
 
@@ -111,7 +113,6 @@
       </section>
 
     </main>
-    <footer>OpenShare Music · <a href="./">Home</a></footer>
   </div>
 </body>
 </html>
