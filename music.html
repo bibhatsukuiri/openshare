@@ -51,6 +51,14 @@
               <option value="70">A♯ / B♭</option><option value="71">B</option>
             </select>
           </label>
+          <label class="control fingering-control" for="fingering-mode">
+            <span>Finger guide</span>
+            <select id="fingering-mode" aria-label="Right-hand fingering guide">
+              <option value="off">Off</option>
+              <option value="bb">B♭</option>
+              <option value="gsharp">G♯ / A♭</option>
+            </select>
+          </label>
           <div class="control tempo-control">
             <label for="tempo">Practice tempo <strong id="tempo-value">90 BPM</strong></label>
             <input type="range" id="tempo" min="55" max="160" step="5" value="90">
@@ -78,6 +86,7 @@
             </div>
           </div>
         </div>
+        <p id="fingering-hint" class="fingering-hint" hidden></p>
         <div class="instrument-foot">
           <span>Follow the highlighted key during practice</span>
           <span id="note-display" class="now-playing" aria-live="polite">Ready to play</span>
