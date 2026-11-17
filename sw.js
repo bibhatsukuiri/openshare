@@ -1,11 +1,11 @@
 "use strict";
-const CACHE_NAME = "harmonium-pwa-20261117-1";
+const CACHE_NAME = "harmonium-pwa-20261117-2";
 const scope = self.registration.scope;
 const appUrl = new URL("music.html", scope).href;
 const precachePaths = [
   "music.html",
-  "music.css?v=20261117-pwa1",
-  "music.js?v=20261117-pwa1",
+  "music.css?v=20261117-anthem1",
+  "music.js?v=20261117-anthem1",
   "harmonium.webmanifest",
   "harmonium-192.png",
   "harmonium-512.png",
