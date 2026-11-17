@@ -1,68 +1,43 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#f7f9fc" />
-  <meta name="description" content="OpenShare: a simple, open-source web app starter." />
-  <title>OpenShare | Your ideas, organized</title>
-  <link rel="stylesheet" href="./styles.css" />
-  <script src="./app.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Open the Harmonium Music Classroom.">
+  <title>Music</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      background: #ffffff;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      min-width: 150px;
+      padding: 14px 28px;
+      border-radius: 5px;
+      background: #2b7164;
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 650;
+    }
+    a:hover { background: #205e53; }
+    a:focus-visible { outline: 3px solid #86bcb0; outline-offset: 4px; }
+  </style>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="site-header">
-      <a class="brand" href="./" aria-label="OpenShare home"><span class="brand-mark">O</span><span>OpenShare</span></a>
-      <nav class="header-actions" aria-label="Explore OpenShare"><a class="music-nav-link" href="./music.html">♫ Music</a><a class="github-link" href="https://github.com/bibhatsukuiri/openshare" target="_blank" rel="noopener noreferrer">View source ↗</a></nav>
-    </header>
-
-    <main>
-      <section class="hero" aria-labelledby="welcome">
-        <span class="eyebrow">A starter app you can build on</span>
-        <h1 id="welcome">A home for your <span>next big idea.</span></h1>
-        <p>OpenShare is a simple starting point for building an app. Add your ideas below and see how a real interactive web page works.</p>
-      </section>
-
-      <section class="music-feature" aria-labelledby="music-feature-title">
-        <div class="music-feature-copy">
-          <span class="music-feature-kicker">NEW · MUSIC CLASSROOM</span>
-          <h2 id="music-feature-title">Learn harmonium, one note at a time.</h2>
-          <p>Play a touch-friendly harmonium, hear Sa Re Ga, and follow glowing keys in beginner lessons. Works on mobile.</p>
-        </div>
-        <a class="music-feature-button" href="./music.html">♫ Open Music <span aria-hidden="true">→</span></a>
-      </section>
-
-      <div class="layout">
-        <section class="panel compose" aria-labelledby="create-heading">
-          <h2 id="create-heading">Create an idea</h2>
-          <p class="muted">Write something you want to make.</p>
-          <form id="idea-form">
-            <label for="idea-title">Title</label>
-            <input id="idea-title" name="title" type="text" maxlength="80" placeholder="e.g. My first app" required />
-            <label for="idea-description">Description</label>
-            <textarea id="idea-description" name="description" rows="5" maxlength="500" placeholder="What's the idea?"></textarea>
-            <button type="submit" class="primary-button">+ Save idea</button>
-          </form>
-          <p class="storage-note">Your ideas are saved in this browser only. No account or database is connected.</p>
-        </section>
-
-        <section class="panel ideas" aria-labelledby="ideas-heading">
-          <div class="section-top">
-            <div><h2 id="ideas-heading">My ideas <span id="idea-count" class="count">0</span></h2><p class="muted">Your personal starting workspace.</p></div>
-          </div>
-          <label class="sr-only" for="search">Search ideas</label>
-          <input id="search" type="search" placeholder="Search your ideas..." autocomplete="off" />
-          <div id="idea-list" class="idea-list" aria-live="polite"></div>
-          <div id="empty-state" class="empty-state" hidden>
-            <span class="empty-icon" aria-hidden="true">✦</span>
-            <h3>Nothing here yet</h3>
-            <p>Add your first idea using the form. It will appear here.</p>
-          </div>
-          <p id="status" class="sr-only" role="status" aria-live="polite"></p>
-        </section>
-      </div>
-    </main>
-    <footer>Built with HTML, CSS and JavaScript. <a href="https://github.com/bibhatsukuiri/openshare">Open-source on GitHub</a>.</footer>
-  </div>
+  <main>
+    <a href="./music.html" aria-label="Open Harmonium Music Classroom">♫ Music</a>
+  </main>
 </body>
 </html>
