@@ -58,6 +58,69 @@ const saSelect = el("sa-select");
 const tempo = el("tempo");
 const tempoValue = el("tempo-value");
 
+
+/* Full screen: use the browser API when available, with a mobile
+   viewport-filling fallback for browsers that do not expose it. */
+const fullscreenButton = el("fullscreen-toggle");
+const fullscreenLabel = el("fullscreen-label");
+const fullscreenStatus = el("fullscreen-status");
+const fullscreenTarget = document.querySelector(".page");
+let fallbackFocusMode = false;
+
+function refreshFullscreenMode() {
+  const nativeFullscreen = Boolean(document.fullscreenElement);
+  const active = nativeFullscreen || fallbackFocusMode;
+  document.body.classList.toggle("focus-mode", active);
+  fullscreenButton.setAttribute("aria-pressed", String(active));
+  fullscreenButton.setAttribute("aria-label", active ? "Exit full-screen view" : "Enter full-screen view");
+  fullscreenLabel.textContent = active ? "Exit full screen" : "Full screen";
+  fullscreenButton.querySelector(".fullscreen-symbol").textContent = active ? "↙" : "⛶";
+}
+
+async function toggleFullscreen() {
+  if (document.fullscreenElement) {
+    try {
+      await document.exitFullscreen();
+    } catch (error) {
+      console.warn("Could not exit browser fullscreen.", error);
+      fullscreenStatus.textContent = "Browser fullscreen could not be closed.";
+    }
+    refreshFullscreenMode();
+    return;
+  }
+  if (fallbackFocusMode) {
+    fallbackFocusMode = false;
+    refreshFullscreenMode();
+    fullscreenStatus.textContent = "Regular view restored.";
+    return;
+  }
+
+  if (typeof fullscreenTarget.requestFullscreen === "function") {
+    try {
+      await fullscreenTarget.requestFullscreen({ navigationUI: "hide" });
+      refreshFullscreenMode();
+      fullscreenStatus.textContent = "Fullscreen is on. Use Exit full screen or your device's back gesture to leave.";
+      return;
+    } catch (error) {
+      // Mobile Safari and some embedded browsers may not support page fullscreen.
+      console.info("Using expanded viewport instead of browser fullscreen.", error);
+    }
+  }
+  fallbackFocusMode = true;
+  refreshFullscreenMode();
+  fullscreenStatus.textContent = "Expanded view enabled. This browser may still show its address bar.";
+}
+
+fullscreenButton.addEventListener("click", toggleFullscreen);
+document.addEventListener("fullscreenchange", () => {
+  if (!document.fullscreenElement) fallbackFocusMode = false;
+  refreshFullscreenMode();
+});
+document.addEventListener("fullscreenerror", () => {
+  fullscreenStatus.textContent = "Full screen was blocked by the browser. Try again or use a different browser.";
+});
+refreshFullscreenMode();
+
 let saMidi = Number(saSelect.value);
 let selectedLesson = "aroha";
 let isPracticing = false;
