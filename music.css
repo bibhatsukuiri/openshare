@@ -574,3 +574,24 @@ body.focus-mode .keyboard.physical-layout .black-key .key-roman{
     font-size:clamp(8px,2.5vw,10px);
   }
 }
+
+
+/* Phones rotated to landscape may exceed 700 CSS pixels.
+   Continue sizing 9-key fingering keyboards to the actual available width. */
+@media(min-width:701px) and (max-width:1100px){
+  body.focus-mode .keyboard,
+  body.focus-mode .keyboard.physical-layout{
+    --white-key-count:8;
+    --white-key-width:calc(100% / var(--white-key-count));
+    --black-key-width:calc(var(--white-key-width) * .55);
+    width:100%;
+    min-width:0;
+    max-width:100%;
+    margin:0 auto;
+  }
+  body.focus-mode .keyboard-scroll{
+    overflow-x:hidden;
+    scrollbar-width:none
+  }
+  body.focus-mode .keyboard .key{touch-action:none}
+}
