@@ -25,9 +25,9 @@ a{color:inherit}
 .home-link{font-size:14px;font-weight:650;display:flex;align-items:center;gap:9px;text-decoration:none}
 .home-link span{font-size:19px;font-weight:400}
 .topbar-label{font-size:14px;color:var(--muted)}
-.intro{padding:51px 0 38px}
-.intro h1{font-size:clamp(38px,5vw,52px);font-weight:680;letter-spacing:-1.9px;margin:0 0 10px;line-height:1.15}
-.intro p{margin:0;max-width:640px;color:var(--muted);font-size:15px;line-height:1.65}
+.intro{padding:34px 0 34px}
+.intro h1{font-size:clamp(38px,5vw,52px);font-weight:680;letter-spacing:-1.9px;margin:0;line-height:1.15}
+.intro p{margin:12px 0 0;max-width:640px;color:var(--muted);font-size:15px;line-height:1.65}
 .instrument,.learn{padding:0;margin:0 0 52px}
 .section-title{
   display:flex;align-items:center;justify-content:space-between;gap:18px;
@@ -160,7 +160,7 @@ footer a{color:var(--accent)}
 @media(max-width:700px){
   .page{padding:0 18px}
   .topbar{height:62px}
-  .intro{padding:35px 0 31px}
+  .intro{padding:26px 0 26px}
   .intro h1{font-size:38px;letter-spacing:-1.25px}
   .intro p{font-size:14px}
   .section-title{margin-bottom:20px}
@@ -181,4 +181,93 @@ footer a{color:var(--accent)}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;transition:none!important}
+}
+
+/* One clear fullscreen action, with no header navigation. */
+.intro-title-line{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.fullscreen-toggle{
+  display:inline-flex;justify-content:center;align-items:center;gap:8px;
+  flex-shrink:0;padding:10px 2px;min-height:44px;
+  background:none;border:0;color:var(--accent);
+  font-size:14px;font-weight:650
+}
+.fullscreen-toggle:hover{text-decoration:underline}
+.fullscreen-symbol{font-size:22px;line-height:1}
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0
+}
+
+/* Immersive mode. Native fullscreen hides browser UI where supported.
+   A fixed-layout fallback fills the available viewport in other browsers. */
+body.focus-mode{overflow:hidden}
+body.focus-mode .page,.page:fullscreen{
+  position:fixed;inset:0;width:100%;height:100vh;height:100dvh;
+  max-width:none;margin:0;padding:12px max(16px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+  overflow-y:auto;overscroll-behavior:contain;background:#fff;
+}
+body.focus-mode .intro{padding:4px 0 12px}
+body.focus-mode .intro h1{font-size:clamp(23px,3vw,34px);letter-spacing:-.65px}
+body.focus-mode .intro p{display:none}
+body.focus-mode .instrument{margin-bottom:22px}
+body.focus-mode .section-title{margin-bottom:12px;padding-bottom:10px}
+body.focus-mode .section-title h2{font-size:18px}
+body.focus-mode .controls{gap:8px 19px;margin-bottom:14px}
+body.focus-mode .control{gap:3px}
+body.focus-mode .keyboard-outer{padding:0}
+body.focus-mode .keyboard{
+  --white-key-width:clamp(46px,calc((100dvw - 38px)/8),115px);
+  --black-key-width:calc(var(--white-key-width) * .58);
+  --black-key-height:clamp(117px,30dvh,215px);
+  height:clamp(225px,52dvh,490px);
+  margin:auto;
+}
+body.focus-mode .white-key{height:calc(100% - 3px);padding-bottom:23px}
+body.focus-mode .black-key{padding-bottom:17px}
+body.focus-mode .keyboard-hint{display:none}
+body.focus-mode .instrument-foot{margin-top:7px}
+body.focus-mode .learn{margin-bottom:20px}
+body.focus-mode .learn .section-title{margin-bottom:7px}
+body.focus-mode .lesson-list{margin-bottom:15px}
+body.focus-mode .lesson-tile{padding:9px 0 10px;min-height:40px}
+body.focus-mode .note-sequence{padding:9px 0}
+body.focus-mode .feedback{margin:8px 0 10px}
+@media(max-width:700px){
+  .intro-title-line{gap:12px}
+  .fullscreen-toggle{font-size:13px}
+  body.focus-mode .intro{padding:2px 0 10px}
+  body.focus-mode .intro h1{font-size:24px}
+  body.focus-mode .instrument,.learn{margin-bottom:22px}
+  body.focus-mode .controls{gap:8px 14px}
+  body.focus-mode .tempo-control{min-width:138px}
+  body.focus-mode .keyboard{
+    --white-key-width:clamp(46px,calc((100dvw - 34px)/8),80px);
+    --black-key-width:calc(var(--white-key-width) * .58);
+    --black-key-height:clamp(108px,27dvh,185px);
+    height:clamp(222px,48dvh,390px);
+    margin:0 auto;
+  }
+  body.focus-mode .white-key .key-roman{font-size:16px}
+  body.focus-mode .white-key .key-dev{font-size:12px}
+  body.focus-mode .lesson-list{gap:0 18px}
+  body.focus-mode .lesson-tile{font-size:13px}
+}
+@media(orientation:landscape) and (max-height:600px){
+  body.focus-mode .page{padding-top:6px;padding-bottom:7px}
+  body.focus-mode .intro{padding:0 0 5px}
+  body.focus-mode .intro h1{font-size:21px}
+  body.focus-mode .section-title{margin-bottom:7px;padding-bottom:7px}
+  body.focus-mode .controls{margin-bottom:6px;gap:8px 18px}
+  body.focus-mode .control select,body.focus-mode .soft-button{min-height:34px}
+  body.focus-mode .tempo-control input{height:30px}
+  body.focus-mode .keyboard{
+    --white-key-width:clamp(47px,calc((100dvw - 36px)/8),130px);
+    --black-key-width:calc(var(--white-key-width) * .56);
+    --black-key-height:clamp(75px,25dvh,150px);
+    height:clamp(145px,43dvh,265px);
+  }
+  body.focus-mode .white-key{padding-bottom:11px}
+  body.focus-mode .black-key{padding-bottom:10px}
+  body.focus-mode .white-key.is-target::after{bottom:56px}
+  body.focus-mode .black-key.is-target::after{bottom:40px}
 }
