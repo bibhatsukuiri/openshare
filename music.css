@@ -625,3 +625,129 @@ body.focus-mode .instructor-credit{
 .install-help summary{color:var(--accent);font-size:13px;cursor:pointer;list-style-position:inside}
 .install-help p{margin:9px auto}
 body.focus-mode .install-area{display:none}
+
+
+/* One uncluttered lesson dropdown, plus line-by-line anthem practice. */
+.lesson-chooser{
+  display:flex;
+  align-items:center;
+  gap:12px 15px;
+  flex-wrap:wrap;
+  margin:0 0 16px;
+}
+.lesson-chooser>label,.song-line-controls>label{
+  font-size:12px;
+  color:var(--muted);
+  font-weight:600;
+}
+.lesson-chooser select{
+  min-height:40px;
+  max-width:100%;
+  border:1px solid #cbd8d1;
+  border-radius:4px;
+  background:#fff;
+  color:var(--ink);
+  padding:7px 10px;
+  font-size:14px;
+}
+#lesson-select{min-width:182px}
+.song-line-controls{
+  display:flex;
+  align-items:center;
+  min-width:0;
+  gap:7px;
+  flex:1;
+}
+.song-line-controls[hidden],.install-help[hidden],
+#listen-all-button[hidden]{display:none !important}
+.song-line-controls select{
+  flex:1;
+  min-width:100px;
+  max-width:350px;
+}
+.line-nav{
+  flex:0 0 35px;
+  width:35px;
+  height:38px;
+  border:1px solid #cbd8d1;
+  border-radius:4px;
+  background:#fff;
+  color:var(--accent);
+  font-size:24px;
+  line-height:1;
+}
+.line-nav:disabled{opacity:.3;cursor:default}
+.keyboard.anthem-layout{
+  width:calc(var(--white-key-width)*9);
+}
+@media(max-width:700px){
+  .keyboard.anthem-layout,
+  body.focus-mode .keyboard.anthem-layout{
+    --white-key-count:9;
+    --white-key-width:calc(100% / 9);
+    --black-key-width:calc(var(--white-key-width)*.55);
+    width:100%;
+    min-width:0;
+    max-width:100%;
+  }
+  .lesson-chooser{gap:8px}
+  .song-line-controls{width:100%}
+  .lesson-chooser>label{display:none}
+  .song-line-controls>label{display:none}
+  #lesson-select{min-width:155px;min-height:38px}
+  .song-line-controls select{min-height:38px}
+  body.focus-mode .learn>.section-title{display:none}
+  body.focus-mode .lesson-chooser{
+    gap:5px;
+    flex-wrap:nowrap;
+    margin:0 0 5px;
+  }
+  body.focus-mode #lesson-select{
+    flex:0 1 132px;
+    width:132px;
+    min-width:110px;
+    height:34px;
+    min-height:34px;
+    padding:5px 4px;
+    font-size:12px;
+  }
+  body.focus-mode .song-line-controls{
+    width:auto;
+    flex:1;
+    gap:3px;
+    min-width:0;
+  }
+  body.focus-mode .song-line-controls select{
+    height:34px;
+    min-height:34px;
+    min-width:0;
+    padding:4px 3px;
+    font-size:12px;
+  }
+  body.focus-mode .line-nav{
+    flex:0 0 29px;
+    width:29px;
+    height:34px;
+    font-size:20px;
+    padding:0;
+  }
+}
+@media(min-width:701px) and (max-width:1100px){
+  body.focus-mode .keyboard.anthem-layout{
+    --white-key-count:9;
+    --white-key-width:calc(100% / 9);
+    --black-key-width:calc(var(--white-key-width)*.55);
+    width:100%;
+  }
+}
+@media(max-width:360px){
+  body.focus-mode .lesson-chooser{flex-wrap:wrap}
+  body.focus-mode #lesson-select{flex:1;width:100%}
+  body.focus-mode .song-line-controls{width:100%}
+}
+@media(orientation:landscape) and (max-height:620px){
+  body.focus-mode .lesson-chooser{margin-bottom:3px}
+  body.focus-mode .song-line-controls select,
+  body.focus-mode #lesson-select{min-height:30px;height:30px}
+  body.focus-mode .line-nav{height:30px}
+}
