@@ -42,3 +42,9 @@ Visit **https://bibhatsukuiri.github.io/openshare/music.html**. The harmonium ca
 - To release changes to the PWA, update the version query strings in `music.html` and `sw.js` and bump `CACHE_NAME` to refresh offline assets.
 
 Web Audio requires the user to tap a key or press Listen to unlock audio. The app remains a static front-end with no accounts or data syncing.
+
+### Music lesson presets
+
+The harmonium lesson dropdown offers **Aroha**, **Avaroha**, and **Jana Gana Mana**. The anthem is organized into 13 guided phrases with individual listening, guided key highlighting, and a **Full song** playback button. A lower-octave Ni key appears in the anthem preset. The melody is based on the all-shuddha sargam transcription at https://web-harmonium.app/notes/jana-gana-mana/ (an educational arrangement; the practice playback is slower than the standard ceremonial rendition).
+
+Installed apps launch into the compact immersive player automatically. The PWA manifest requests fullscreen on supporting systems and falls back to standalone mode; ordinary browser pages cannot enter native fullscreen without a user gesture.
