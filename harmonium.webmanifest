@@ -2,14 +2,29 @@
   "id": "./music.html",
   "name": "Harmonium Classroom",
   "short_name": "Harmonium",
-  "description": "Touch-friendly harmonium practice with sargam exercises",
+  "description": "Learn harmonium with Shreya: interactive keys, guided sargam and fingering practice.",
   "start_url": "./music.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "orientation": "any",
   "icons": [
+    {
+      "src": "./harmonium-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./harmonium-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "./harmonium-icon.svg",
       "sizes": "any",

@@ -616,3 +616,12 @@ body.focus-mode .instructor-credit{
 @media(orientation:landscape) and (max-height:620px){
   body.focus-mode .instructor-credit{margin:3px 0 0;padding:2px 0 0}
 }
+
+/* Unobtrusive PWA installation instructions, outside immersive practice mode. */
+.install-area{margin:22px 0 6px;text-align:center}
+.install-button{padding:10px 17px;color:white;border:0;border-radius:5px;background:var(--accent);font-size:14px;font-weight:650}
+.install-button[hidden],.install-help[hidden]{display:none}
+.install-help{margin:10px auto;max-width:480px;font-size:12px;color:var(--muted);line-height:1.6}
+.install-help summary{color:var(--accent);font-size:13px;cursor:pointer;list-style-position:inside}
+.install-help p{margin:9px auto}
+body.focus-mode .install-area{display:none}

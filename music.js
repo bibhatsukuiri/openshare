@@ -672,3 +672,55 @@ window.addEventListener("pagehide", () => {
 
 renderLesson();
 setIdleActions();
+
+/* Installable PWA and offline service worker. */
+(() => {
+  const installButton = document.getElementById("install-button");
+  const installHelp = document.getElementById("install-help");
+  let installPrompt = null;
+  const isStandalone = () =>
+    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+    window.navigator.standalone === true;
+
+  if (isStandalone()) {
+    installButton.hidden = true;
+    installHelp.hidden = true;
+  } else {
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      installPrompt = event;
+      installButton.hidden = false;
+      installHelp.hidden = true;
+    });
+    installButton.addEventListener("click", async () => {
+      if (!installPrompt) {
+        installHelp.hidden = false;
+        installHelp.open = true;
+        return;
+      }
+      const request = installPrompt;
+      installPrompt = null;
+      installButton.hidden = true;
+      try {
+        await request.prompt();
+        const choice = await request.userChoice;
+        if (!choice || choice.outcome !== "accepted") installHelp.hidden = false;
+      } catch (error) {
+        console.warn("App installation prompt was unavailable.", error);
+        installHelp.hidden = false;
+      }
+    });
+    window.addEventListener("appinstalled", () => {
+      installButton.hidden = true;
+      installHelp.hidden = true;
+      installPrompt = null;
+    });
+  }
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js", { scope: "./" })
+        .catch(error => console.warn("Offline mode unavailable:", error));
+    });
+  }
+})();

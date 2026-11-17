@@ -8,11 +8,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Harmonium">
   <link rel="manifest" href="./harmonium.webmanifest">
-  <link rel="icon" type="image/svg+xml" href="./harmonium-icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="./harmonium-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./harmonium-180.png">
   <meta name="description" content="Learn basic Indian classical music with a touch-friendly virtual harmonium, sargam lessons, and guided practice.">
   <title>Harmonium Classroom | OpenShare Music</title>
-  <link rel="stylesheet" href="./music.css?v=20261117-shreya1">
-  <script defer src="./music.js?v=20261117-responsive3"></script>
+  <link rel="stylesheet" href="./music.css?v=20261117-pwa1">
+  <script defer src="./music.js?v=20261117-pwa1"></script>
 </head>
 <body>
   <div class="page">
@@ -126,6 +127,15 @@
         </div>
       </section>
 
+      <div class="install-area">
+        <button type="button" id="install-button" class="install-button" hidden>Install Harmonium</button>
+        <details id="install-help" class="install-help">
+          <summary>Add Harmonium to your home screen</summary>
+          <p><strong>Android:</strong> Open this page in Chrome, tap the browser menu, then choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p>
+          <p><strong>iPhone:</strong> Open in Safari, tap <strong>Share</strong>, choose <strong>Add to Home Screen</strong>, then tap <strong>Add</strong>.</p>
+          <p>Once installed, the keyboard and lessons can work offline after the first successful load.</p>
+        </details>
+      </div>
       <footer class="instructor-credit">Instructor: Shreya</footer>
     </main>
   </div>

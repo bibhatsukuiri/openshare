@@ -29,3 +29,16 @@ Change the content in `index.html`, the design in `styles.css`, and app behavior
 ## License
 
 No license has been added yet. A public repository is viewable, but an open-source reuse license must be chosen separately if you want to grant reuse permissions.
+
+## Harmonium Classroom (installable PWA)
+
+Visit **https://bibhatsukuiri.github.io/openshare/music.html**. The harmonium can be installed on phones as a standalone Progressive Web App.
+
+- **Android Chrome:** Use the in-page **Install Harmonium** button when available, or browser menu > Install app / Add to Home screen.
+- **iPhone Safari:** Share > Add to Home Screen > Add.
+- Once installed, open the **Harmonium** icon from your phone. It does not need an app store.
+- The service worker (`sw.js`) caches the music page, CSS, JavaScript, manifest, and icons, so the keyboard and built-in lessons can run offline after initial caching.
+- `harmonium.webmanifest` sets the standalone app name and home-screen icon. `harmonium-192.png` and `harmonium-512.png` are app icons; `harmonium-180.png` is the Apple touch icon.
+- To release changes to the PWA, update the version query strings in `music.html` and `sw.js` and bump `CACHE_NAME` to refresh offline assets.
+
+Web Audio requires the user to tap a key or press Listen to unlock audio. The app remains a static front-end with no accounts or data syncing.
