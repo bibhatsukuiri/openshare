@@ -2,11 +2,12 @@
   "id": "./music.html",
   "name": "Harmonium Classroom",
   "short_name": "Harmonium",
-  "description": "Learn harmonium with Shreya: interactive keys, guided sargam and fingering practice.",
+  "description": "Harmonium practice with Jana Gana Mana, Aroha and Avaroha. Instructor: Shreya.",
   "start_url": "./music.html",
   "scope": "./",
-  "display": "standalone",
+  "display": "fullscreen",
   "display_override": [
+    "fullscreen",
     "standalone"
   ],
   "background_color": "#ffffff",
