@@ -513,3 +513,64 @@ body.focus-mode .keyboard.physical-layout .black-key .key-roman{
     font-size:12px;
   }
 }
+
+
+/* Responsive keyboard: fit every white and black key within the viewport.
+   The fingering renderer sets --white-key-count to 9, otherwise it is 8.
+   Percentage widths keep both modes responsive without horizontal scrolling. */
+@media(max-width:700px){
+  .keyboard,.keyboard.physical-layout,
+  body.focus-mode .keyboard,body.focus-mode .keyboard.physical-layout{
+    --white-key-count:8;
+    --white-key-width:calc(100% / var(--white-key-count));
+    --black-key-width:calc(var(--white-key-width) * .55);
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    margin:0 auto;
+  }
+  .keyboard-scroll,
+  body.focus-mode .keyboard-scroll{
+    overflow-x:clip;
+    overflow-y:hidden;
+    touch-action:manipulation;
+    scrollbar-width:none;
+  }
+  .keyboard-scroll::-webkit-scrollbar{display:none}
+  .keyboard .key{touch-action:none}
+  .keyboard .white-key{min-width:0}
+  .keyboard.physical-layout .finger-label{
+    width:clamp(15px,4.2vw,20px);
+    height:clamp(15px,4.2vw,20px);
+    font-size:11px;
+    top:5px;
+  }
+  .keyboard.physical-layout .black-key .finger-label{
+    width:clamp(14px,3.9vw,19px);
+    height:clamp(14px,3.9vw,19px);
+    font-size:10px;
+    top:5px;
+  }
+  .keyboard.physical-layout .black-key .key-dev{display:none}
+  .keyboard.physical-layout .black-key{
+    gap:0;
+    padding:0 0 8px;
+  }
+  .keyboard.physical-layout .black-key .key-roman{
+    font-size:clamp(8px,2.5vw,10px);
+    letter-spacing:-.5px;
+  }
+  .keyboard .white-key .key-roman{
+    font-size:clamp(11px,3.2vw,15px);
+    white-space:nowrap;
+  }
+  .keyboard .white-key .key-dev{
+    font-size:clamp(9px,2.7vw,11px);
+  }
+  body.focus-mode .keyboard.physical-layout .white-key .key-roman{
+    font-size:clamp(11px,3.2vw,14px);
+  }
+  body.focus-mode .keyboard.physical-layout .black-key .key-roman{
+    font-size:clamp(8px,2.5vw,10px);
+  }
+}
