@@ -6,7 +6,7 @@
  * No accounts, uploads, or sound files are needed.
  */
 const NOTE_NAMES = new Map([
-  [0, "Sa"], [1, "Komal Re"], [2, "Re"], [3, "Komal Ga"],
+  [-1, "Low Ni"], [0, "Sa"], [1, "Komal Re"], [2, "Re"], [3, "Komal Ga"],
   [4, "Ga"], [5, "Ma"], [6, "Tivra Ma"], [7, "Pa"],
   [8, "Komal Dha"], [9, "Dha"], [10, "Komal Ni"], [11, "Ni"],
   [12, "High Sa"]
